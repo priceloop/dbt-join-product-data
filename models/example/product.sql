@@ -16,7 +16,7 @@ with temp_table as (
         item_condition as "item condition",
         cd."sellable_inventory" as "sellable inventory",
         cd.marketplace as "marketplace",
-        cd."fulfillment-center-id" as "fulfillment"
+        -- cd."fulfillment-center-id" as "fulfillment"
         -- cd.fulfillment as "fulfillment"
         
     from  {{ 
