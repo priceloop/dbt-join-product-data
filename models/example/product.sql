@@ -15,7 +15,7 @@ with temp_table as (
         merchant_shipping_group as "merchant shipping group",
         item_condition as "item condition",
         cd."sellable_inventory" as "sellable inventory",
-        cd.country as "marketplace",
+        cd.marketplace as "marketplace",
         cd."fulfillment-center-id" as "fulfillment"
         -- cd.fulfillment as "fulfillment"
         
