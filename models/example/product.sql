@@ -15,7 +15,7 @@ with temp_table as (
         merchant_shipping_group as "merchant shipping group",
         item_condition as "item condition",
         cd."sellable_inventory" as "sellable inventory",
-        cd.marketplace as "marketplace",
+        cd.marketplace as "marketplace"
         -- cd."fulfillment-center-id" as "fulfillment"
         -- cd.fulfillment as "fulfillment"
         
@@ -34,15 +34,5 @@ with temp_table as (
 )
 
 select 
-    SKU,
-    ASIN,
-    "item name",
-    "item description",
-    "status",
-    "merchant shipping group",
-    "item condition",
-    "sellable inventory",
-    "marketplace",
-    "fulfillment"
-    
+    *
     from temp_table
