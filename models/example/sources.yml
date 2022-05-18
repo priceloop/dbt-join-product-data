@@ -1,10 +1,12 @@
 version: 2
 sources:
 - name: "{{env_var('DATABASE_SCHEMA', var('source_schema', ''))}}"
+  schema: "{{env_var('DATABASE_SCHEMA', var('source_schema', ''))}}"
   quoting:
     database: false
     schema: false
     identifier: false
+  loader: stitch
   tables:
   - name: "{{env_var('SOURCE_MERCHANT_LISTING_ALL_DATA', var('source_table', ''))}}"
   - name: "{{env_var('SOURCE_FBA_FULFILLMENT_CURRENT_INVENTORY_REPORT', var('source_table', ''))}}"
