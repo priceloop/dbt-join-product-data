@@ -1,13 +1,15 @@
-{ { config(
+{{ config(
     alias = env_var(
         'DESTINATION_TABLE',
         var('destination_table', '')
     )
-) } } with temp_table as (
+) }} 
+
+with temp_table as (
     select
         seller_sku as Sku,
         asin1 as Asin,
-        "DE" as "Marketplace",
+        'DE' as "Marketplace",
         item_name as "Item Name",
         status as "Listing Status",
         case
@@ -30,20 +32,20 @@
         end as "Fulfillment Channel",
         price as "Amazon Item Price"
     from
-        { { source(
+        {{ source(
             env_var('DATABASE_SCHEMA', var('source_schema', '')),
             env_var(
                 'SOURCE_MERCHANT_LISTING_ALL_DATA',
                 var('source_table', '')
             )
-        ) } } mlad
-        left join { { source(
+        ) }} mlad
+        left join {{ source(
             env_var('DATABASE_SCHEMA', var('source_schema', '')),
             env_var(
                 'SOURCE_FBA_FULFILLMENT_CURRENT_INVENTORY_REPORT',
                 var('source_table', '')
             )
-        ) } } cd on mlad.seller_sku = cd.sku
+        ) }} cd on mlad.seller_sku = cd.sku
 )
 select
     *
