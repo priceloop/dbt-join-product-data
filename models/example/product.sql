@@ -23,8 +23,11 @@ with temp_table as (
             when "item_condition" = '8' then 'Collectible; Acceptable'
             when "item_condition" = '10' then 'Refurbished'
             else 'New'
-        end as "Item Condtion",
-        cd."sellable_inventory" as "Sellable Inventory",
+        end as "Item Condition",
+        case
+            when Marketplace is not null then cd."sellable_inventory"
+            else quantity
+        end as "Sellable Inventory",
         item_description as "item description",
         case
             when Marketplace is not null then 'FBA'
@@ -39,13 +42,42 @@ with temp_table as (
                 var('source_table', '')
             )
         ) }} mlad
-        left join {{ source(
-            env_var('DATABASE_SCHEMA', var('source_schema', '')),
-            env_var(
-                'SOURCE_FBA_FULFILLMENT_CURRENT_INVENTORY_REPORT',
-                var('source_table', '')
-            )
-        ) }} cd on mlad.seller_sku = cd.sku
+        left join (
+            select
+                sku,
+                marketplace,
+                sum(sellable_inventory) as "sellable_inventory"
+            from
+                {{ source(
+                    env_var('DATABASE_SCHEMA', var('source_schema', '')),
+                    env_var(
+                        'SOURCE_FBA_FULFILLMENT_CURRENT_INVENTORY_REPORT',
+                        var('source_table', '')
+                    )
+                ) }}
+            where
+                "marketplace" = 'DE'
+                and "snapshot_date" =(
+                    select
+                        distinct snapshot_date
+                    from
+                        {{ source(
+                            env_var('DATABASE_SCHEMA', var('source_schema', '')),
+                            env_var(
+                                'SOURCE_FBA_FULFILLMENT_CURRENT_INVENTORY_REPORT',
+                                var('source_table', '')
+                            )
+                        ) }}
+                    order by
+                        snapshot_date desc
+                    limit
+                        1
+                )
+            group by
+                sku,
+                marketplace,
+                snapshot_date
+        ) cd on mlad.seller_sku = cd.sku
 )
 select
     *
