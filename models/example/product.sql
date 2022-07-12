@@ -1,9 +1,11 @@
-{ { config(
+{{ config(
     alias = env_var(
         'DESTINATION_TABLE',
         var('destination_table', '')
     )
-) } } with temp_table as (
+) }}
+
+with temp_table as (
     select
         seller_sku as Sku,
         asin1 as Asin,
@@ -33,39 +35,39 @@
         end as "Is FBA",
         price as "Amazon Item Price"
     from
-        { { source(
+        {{ source(
             env_var('DATABASE_SCHEMA', var('source_schema', '')),
             env_var(
                 'SOURCE_MERCHANT_LISTING_ALL_DATA',
                 var('source_table', '')
             )
-        ) } } mlad
+        ) }} mlad
         left join (
             select
                 sku,
                 marketplace,
                 sum(sellable_inventory) as "sellable_inventory"
             from
-                { { source(
+                {{ source(
                     env_var('DATABASE_SCHEMA', var('source_schema', '')),
                     env_var(
                         'SOURCE_FBA_FULFILLMENT_CURRENT_INVENTORY_REPORT',
                         var('source_table', '')
                     )
-                ) } }
+                ) }}
             where
                 "marketplace" = 'DE'
                 and "snapshot_date" =(
                     select
                         distinct snapshot_date
                     from
-                        { { source(
+                        {{ source(
                             env_var('DATABASE_SCHEMA', var('source_schema', '')),
                             env_var(
                                 'SOURCE_FBA_FULFILLMENT_CURRENT_INVENTORY_REPORT',
                                 var('source_table', '')
                             )
-                        ) } }
+                        ) }}
                     order by
                         snapshot_date desc
                     limit
