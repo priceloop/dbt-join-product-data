@@ -28,7 +28,6 @@ with temp_table as (
             when Marketplace is not null then cd."sellable_inventory"
             else quantity
         end as "Sellable Inventory",
-        item_description as "item description",
         case
             when Marketplace is not null then true
             else false
