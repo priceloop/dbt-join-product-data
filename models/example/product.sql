@@ -36,10 +36,7 @@ with temp_table as (
     from
         {{ source(
             env_var('DATABASE_SCHEMA', var('source_schema', '')),
-            env_var(
-                'SOURCE_MERCHANT_LISTING_ALL_DATA',
-                var('source_table', '')
-            )
+            'merchant_listing'
         ) }} mlad
         left join (
             select
@@ -49,11 +46,9 @@ with temp_table as (
             from
                 {{ source(
                     env_var('DATABASE_SCHEMA', var('source_schema', '')),
-                    env_var(
-                        'SOURCE_FBA_FULFILLMENT_CURRENT_INVENTORY_REPORT',
-                        var('source_table', '')
+                    'fba_fulfillment'
                     )
-                ) }}
+                }}
             where
                 "marketplace" = 'DE'
                 and "snapshot_date" =(
@@ -62,11 +57,9 @@ with temp_table as (
                     from
                         {{ source(
                             env_var('DATABASE_SCHEMA', var('source_schema', '')),
-                            env_var(
-                                'SOURCE_FBA_FULFILLMENT_CURRENT_INVENTORY_REPORT',
-                                var('source_table', '')
+                            'fba_fulfillment'
                             )
-                        ) }}
+                        }}
                     order by
                         snapshot_date desc
                     limit
