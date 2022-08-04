@@ -1,16 +1,6 @@
 version: 2
 sources:
-- name: fba_fulfillment
-  schema: "{{env_var('DATABASE_SCHEMA', var('source_schema', ''))}}"
-  quoting:
-    database: false
-    schema: false
-    identifier: false
-  loader: stitch
-  tables:
-  - name: fba_fulfillment
-
-- name: merchant_listing
+- name: "{{env_var('DATABASE_SCHEMA', var('source_schema', ''))}}"
   schema: "{{env_var('DATABASE_SCHEMA', var('source_schema', ''))}}"
   quoting:
     database: false
@@ -19,3 +9,4 @@ sources:
   loader: stitch
   tables:
   - name: merchant_listing
+  - name: fba_fulfillment
